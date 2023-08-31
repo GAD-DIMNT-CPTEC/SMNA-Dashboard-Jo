@@ -1,0 +1,17 @@
+name: SMNA
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - holoviews=1.15.4
+  - hvplot=0.8.2
+  - jupyterlab=3.5.3
+  - panel=0.14.3
+  - pip=23.0.1
+  - python=3.11.2
+  - pip:
+      - ipywidgets==8.0.6
+      - jupyterlab-widgets==3.0.7
+      - panel-modal==0.2.0
+      - widgetsnbextension==4.0.7
+prefix: /home/carlos/anaconda3/envs/SMNA
