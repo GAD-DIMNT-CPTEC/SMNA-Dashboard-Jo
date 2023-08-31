@@ -93,7 +93,7 @@ pn.extension(sizing_mode="stretch_width", notifications=True)
 #dfs = pd.read_csv('https://raw.githubusercontent.com/GAD-DIMNT-CPTEC/SMNA-Dashboard/main/jo_table_series.csv', header=[0, 1], parse_dates=[('df_dtc', 'Date'),('df_bamh_T0', 'Date'),('df_bamh_T4', 'Date'),('df_bamh_GT4AT2', 'Date'),('df_dtc_alex', 'Date')])
 #dfs = pd.read_csv('https://s0.cptec.inpe.br/pesquisa/das/dist/carlos.bastarz/SMNA/dashboard/jo_table_series.csv', header=[0, 1], parse_dates=[('df_dtc', 'Date'),('df_bamh_T0', 'Date'),('df_bamh_T4', 'Date'),('df_bamh_GT4AT2', 'Date'),('df_dtc_alex', 'Date')]) 
 
-dfs = pd.read_csv('jo_table_series.csv', header=[0, 1], parse_dates=[('df_preOper', 'Date'), ('df_JGerd', 'Date')])
+dfs = pd.read_csv('https://raw.githubusercontent.com/GAD-DIMNT-CPTEC/SMNA-Dashboard-Jo/main/jo_table_series.csv', header=[0, 1], parse_dates=[('df_preOper', 'Date'), ('df_JGerd', 'Date')])
 
 
 # In[33]:
