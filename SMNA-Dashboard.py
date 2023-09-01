@@ -62,7 +62,7 @@ df_preOper.name = 'df_preOper'
 df_JGerd.name = 'df_JGerd'
 
 
-# In[5]:
+# In[28]:
 
 
 # Constrói as widgets e apresenta o dashboard
@@ -82,13 +82,15 @@ date_range_slider = pn.widgets.DateRangeSlider(
 )
 
 experiment_list = [df_preOper, df_JGerd]
+experiment_list2 = ['df_preOper', 'df_JGerd']
 variable_list = ['surface pressure', 'temperature', 'wind', 'moisture', 'gps', 'radiance'] 
 synoptic_time_list = ['00Z', '06Z', '12Z', '18Z', '00Z e 12Z', '06Z e 18Z', '00Z, 06Z, 12Z e 18Z']
 iter_fcost_list = ['OMF', 'OMF (1st INNER LOOP)', 'OMF (2nd INNER LOOP)', 'OMA (AFTER 1st OUTER LOOP)', 'OMA (1st INNER LOOP)', 'OMA (2nd INNER LOOP)', 'OMA (AFTER 2nd OUTER LOOP)']
 
 date_range = date_range_slider.value
 
-experiment = pn.widgets.MultiChoice(name='Experimentos', value=[experiment_list[0].name], options=[i.name for i in experiment_list], solid=False)
+experiment = pn.widgets.MultiChoice(name='Experimentos (Gráficos)', value=[experiment_list[0].name], options=[i.name for i in experiment_list], solid=False)
+experiment2 = pn.widgets.Select(name='Experimento (Tabela)', value=experiment_list[0].name, options=[i.name for i in experiment_list])
 variable = pn.widgets.Select(name='Variável', value=variable_list[0], options=variable_list)
 synoptic_time = pn.widgets.RadioBoxGroup(name='Horário', options=synoptic_time_list, inline=False)
 iter_fcost = pn.widgets.Select(name='Iteração', value=iter_fcost_list[0], options=iter_fcost_list)
@@ -182,6 +184,43 @@ def plotCurves(variable, experiment, synoptic_time, iter_fcost, date_range):
             
     return pn.Column(ax_nobs, ax_jo, ax_jon, sizing_mode='stretch_width')
 
+@pn.depends(variable, experiment2, synoptic_time, iter_fcost, date_range_slider.param.value)
+def getTable(variable, experiment2, synoptic_time, iter_fcost, date_range):
+    #for count, i in enumerate(experiment):
+    #    if count == 0:
+    sdf = globals()[experiment2]
+    df = dfs.xs(sdf.name, axis=1)
+            
+    start_date, end_date = date_range
+    df2 = subset_dataframe(df, start_date, end_date)
+            
+    if synoptic_time == '00Z': time_fmt0 = '00:00:00'; time_fmt1 = '00:00:00'
+    if synoptic_time == '06Z': time_fmt0 = '06:00:00'; time_fmt1 = '06:00:00'
+    if synoptic_time == '12Z': time_fmt0 = '12:00:00'; time_fmt1 = '12:00:00'
+    if synoptic_time == '18Z': time_fmt0 = '18:00:00'; time_fmt1 = '18:00:00'    
+    
+    if synoptic_time == '00Z e 12Z': time_fmt0 = '00:00:00'; time_fmt1 = '12:00:00'
+    if synoptic_time == '06Z e 18Z': time_fmt0 = '06:00:00'; time_fmt1 = '18:00:00'
+    
+    if synoptic_time == '00Z e 06Z': time_fmt0 = '00:00:00'; time_fmt1 = '06:00:00'
+    if synoptic_time == '12Z e 18Z': time_fmt0 = '12:00:00'; time_fmt1 = '18:00:00'    
+    
+    if synoptic_time == '00Z, 06Z, 12Z e 18Z': time_fmt0 = '00:00:00'; time_fmt1 = '18:00:00'    
+    
+    if time_fmt0 == time_fmt1:
+        df_s = df2.loc[df2['Observation Type'] == variable].loc[df2['Iter'] == iter_fcost].set_index('Date').at_time(str(time_fmt0)).reset_index()
+    else:                
+        df_s = df2.loc[df2['Observation Type'] == variable].loc[df2['Iter'] == iter_fcost].set_index('Date').between_time(str(time_fmt0), str(time_fmt1), inclusive='both')
+                
+    if synoptic_time == '00Z e 12Z':
+        df_s = df_s.drop(df_s.at_time('06:00:00').index).reset_index()
+    elif synoptic_time == '06Z e 18Z':    
+        df_s = df_s.drop(df_s.at_time('12:00:00').index).reset_index()
+    elif synoptic_time == '00Z, 06Z, 12Z e 18Z':
+        df_s = df_s.reset_index()                    
+                
+    return pn.Column(df_s, sizing_mode='stretch_width')
+
 ###
 
 text_info = """
@@ -223,7 +262,7 @@ Atualizado em: 09/05/2023 ([carlos.bastarz@inpe.br](mailto:carlos.bastarz@inpe.b
 
 #show_text = Modal(pn.panel(text_info, width=850))
 
-card_parameters = pn.Card(variable, iter_fcost, date_range_slider, synoptic_time, pn.Column(experiment, height=240),
+card_parameters = pn.Card(variable, iter_fcost, date_range_slider, synoptic_time, experiment2, pn.Column(experiment, height=240),
                           title='Parâmetros', collapsed=False)
 
 #card_info = pn.Card(show_text.param.open, show_text, title='Informações', collapsed=False)
@@ -237,17 +276,19 @@ card_parameters = pn.Card(variable, iter_fcost, date_range_slider, synoptic_time
 #settings = pn.Column(card_info, card_parameters)
 settings = pn.Column(card_parameters)
 
+tabs_contents = pn.Tabs(('Gráficos', plotCurves), ('Tabela', getTable))
+
 ###
 
 pn.Column(
     settings,
-    plotCurves,
+    tabs_contents,
     width_policy='max'
 )
 
 pn.template.FastListTemplate(
     site="SMNA Dashboard", title="Função Custo (Jo)", sidebar=[settings],
-    main=["Visualização da minimização do termo **Jo** da função custo variacional do **SMNA**", plotCurves], 
+    main=["Visualização da minimização do termo **Jo** da função custo variacional do **SMNA**", tabs_contents], 
 #).show();
 ).servable();
 
