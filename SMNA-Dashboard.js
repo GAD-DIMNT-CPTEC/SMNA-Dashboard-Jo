@@ -90,7 +90,8 @@ pn.extension(sizing_mode="stretch_width", notifications=True)
 
 # Carrega o arquivo CSV
 
-dfs = pd.read_csv('https://raw.githubusercontent.com/GAD-DIMNT-CPTEC/SMNA-Dashboard-Jo/main/jo_table_series.csv', header=[0, 1], parse_dates=[('df_preOper', 'Date'), ('df_JGerd', 'Date')])
+#dfs = pd.read_csv('https://raw.githubusercontent.com/GAD-DIMNT-CPTEC/SMNA-Dashboard-Jo/main/jo_table_series.csv', header=[0, 1], parse_dates=[('df_preOper', 'Date'), ('df_JGerd', 'Date')])
+dfs = pd.read_csv('jo_table_series.csv', header=[0, 1], parse_dates=[('df_preOper', 'Date'), ('df_JGerd', 'Date')])
 
 
 # In[3]:
@@ -111,7 +112,7 @@ df_preOper.name = 'df_preOper'
 df_JGerd.name = 'df_JGerd'
 
 
-# In[28]:
+# In[6]:
 
 
 # Constrói as widgets e apresenta o dashboard
@@ -120,7 +121,7 @@ df_JGerd.name = 'df_JGerd'
 #end_date = df_JGerd.iloc[-1]['Date']
 
 start_date = pd.Timestamp('2023-01-01 06:00:00')
-end_date = pd.Timestamp('2023-09-01 00:00:00')
+end_date = pd.Timestamp('2023-09-14 00:00:00')
 
 date_range_slider = pn.widgets.DateRangeSlider(
     name='Intervalo',
