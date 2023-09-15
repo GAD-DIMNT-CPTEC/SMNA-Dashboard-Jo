@@ -41,8 +41,8 @@ pn.extension(sizing_mode="stretch_width", notifications=True)
 
 # Carrega o arquivo CSV
 
-#dfs = pd.read_csv('https://raw.githubusercontent.com/GAD-DIMNT-CPTEC/SMNA-Dashboard-Jo/main/jo_table_series.csv', header=[0, 1], parse_dates=[('df_preOper', 'Date'), ('df_JGerd', 'Date')])
-dfs = pd.read_csv('jo_table_series.csv', header=[0, 1], parse_dates=[('df_preOper', 'Date'), ('df_JGerd', 'Date')])
+dfs = pd.read_csv('https://raw.githubusercontent.com/GAD-DIMNT-CPTEC/SMNA-Dashboard-Jo/main/jo_table_series.csv', header=[0, 1], parse_dates=[('df_preOper', 'Date'), ('df_JGerd', 'Date')])
+#dfs = pd.read_csv('jo_table_series.csv', header=[0, 1], parse_dates=[('df_preOper', 'Date'), ('df_JGerd', 'Date')])
 
 
 # In[3]:
