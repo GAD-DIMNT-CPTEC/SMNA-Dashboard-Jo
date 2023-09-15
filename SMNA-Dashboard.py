@@ -63,7 +63,7 @@ df_preOper.name = 'df_preOper'
 df_JGerd.name = 'df_JGerd'
 
 
-# In[8]:
+# In[9]:
 
 
 # Constrói as widgets e apresenta o dashboard
@@ -148,9 +148,9 @@ def plotCurves(variable, experiment, synoptic_time, iter_fcost, date_range):
             ax_jon = df_s.hvplot.line(x='Date', y='Jo/n', xlabel='Data', ylabel=str('Jo/n'), xticks=xticks, rot=90, grid=True, label=str(i), line_width=3, height=height, responsive=True)
             
             # Adiciona pontos às curvas
-            sax_nobs = df_s.hvplot.scatter(x='Date', y='Nobs', height=height, responsive=True).opts(size=5, marker='o')    
-            sax_jo = df_s.hvplot.scatter(x='Date', y='Jo', height=height, responsive=True).opts(size=5, marker='o')     
-            sax_jon = df_s.hvplot.scatter(x='Date', y='Jo/n', height=height, responsive=True).opts(size=5, marker='o')             
+            sax_nobs = df_s.hvplot.scatter(x='Date', y='Nobs', height=height, label=str(i), responsive=True).opts(size=5, marker='o')    
+            sax_jo = df_s.hvplot.scatter(x='Date', y='Jo', height=height, label=str(i), responsive=True).opts(size=5, marker='o')     
+            sax_jon = df_s.hvplot.scatter(x='Date', y='Jo/n', height=height, label=str(i), responsive=True).opts(size=5, marker='o')             
             
         else:
             
@@ -189,9 +189,9 @@ def plotCurves(variable, experiment, synoptic_time, iter_fcost, date_range):
             ax_jon *= df_s.hvplot.line(x='Date', y='Jo/n', xlabel='Data', ylabel=str('Jo/n'), xticks=xticks, rot=90, grid=True, label=str(i), line_width=3, height=height, responsive=True)
             
             # Adiciona pontos às curvas
-            sax_nobs *= df_s.hvplot.scatter(x='Date', y='Nobs', height=height, responsive=True).opts(size=5, marker='o')    
-            sax_jo *= df_s.hvplot.scatter(x='Date', y='Jo', height=height, responsive=True).opts(size=5, marker='o')     
-            sax_jon *= df_s.hvplot.scatter(x='Date', y='Jo/n', height=height, responsive=True).opts(size=5, marker='o')             
+            sax_nobs *= df_s.hvplot.scatter(x='Date', y='Nobs', height=height, label=str(i), responsive=True).opts(size=5, marker='o')    
+            sax_jo *= df_s.hvplot.scatter(x='Date', y='Jo', height=height, label=str(i), responsive=True).opts(size=5, marker='o')     
+            sax_jon *= df_s.hvplot.scatter(x='Date', y='Jo/n', height=height, label=str(i), responsive=True).opts(size=5, marker='o')             
             
     return pn.Column(ax_nobs*sax_nobs, ax_jo*sax_jo, ax_jon*sax_jon, sizing_mode='stretch_width')
 
