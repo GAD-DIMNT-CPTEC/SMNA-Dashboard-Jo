@@ -112,24 +112,17 @@ df_preOper.name = 'df_preOper'
 df_JGerd.name = 'df_JGerd'
 
 
-# In[9]:
+# In[5]:
 
 
 # Constrói as widgets e apresenta o dashboard
 
-#start_date = df_JGerd.iloc[0]['Date']
-#end_date = df_JGerd.iloc[-1]['Date']
+start_date = datetime(2023, 1, 1, 0)
+end_date = datetime(2023, 9, 14, 0)
 
-start_date = pd.Timestamp('2023-01-01 06:00:00')
-end_date = pd.Timestamp('2023-09-14 00:00:00')
+values = (start_date, end_date)
 
-date_range_slider = pn.widgets.DateRangeSlider(
-    name='Intervalo',
-    start=start_date, end=end_date,
-    value=(start_date, end_date),
-    step=24*3600*1000,
-    orientation='horizontal'
-)
+date_range_slider = pn.widgets.DatetimeRangePicker(name='Intervalo', value=values, enable_time=False)
 
 experiment_list = [df_preOper, df_JGerd]
 experiment_list2 = ['df_preOper', 'df_JGerd']
