@@ -118,7 +118,7 @@ df_JGerd.name = 'df_JGerd'
 # Constrói as widgets e apresenta o dashboard
 
 start_date = datetime(2023, 1, 1, 0)
-end_date = datetime(2023, 9, 24, 0)
+end_date = datetime(2023, 9, 25, 0)
 
 values = (start_date, end_date)
 
