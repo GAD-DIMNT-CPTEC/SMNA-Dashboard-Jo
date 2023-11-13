@@ -85,7 +85,7 @@ from matplotlib import pyplot as plt
 pn.extension(sizing_mode="stretch_width", notifications=True)
 
 
-# In[2]:
+# In[3]:
 
 
 # Carrega o arquivo CSV
@@ -94,7 +94,7 @@ dfs = pd.read_csv('https://raw.githubusercontent.com/GAD-DIMNT-CPTEC/SMNA-Dashbo
 #dfs = pd.read_csv('jo_table_series.csv', header=[0, 1], parse_dates=[('df_preOper', 'Date'), ('df_JGerd', 'Date')])
 
 
-# In[3]:
+# In[4]:
 
 
 # Separa os dataframes de interesse
@@ -103,7 +103,7 @@ df_preOper = dfs.df_preOper
 df_JGerd = dfs.df_JGerd
 
 
-# In[4]:
+# In[5]:
 
 
 # Atribui nomes aos dataframes
@@ -112,13 +112,13 @@ df_preOper.name = 'df_preOper'
 df_JGerd.name = 'df_JGerd'
 
 
-# In[5]:
+# In[6]:
 
 
 # Constrói as widgets e apresenta o dashboard
 
 start_date = datetime(2023, 1, 1, 0)
-end_date = datetime(2023, 10, 19, 0)
+end_date = datetime(2023, 11, 13, 0)
 
 values = (start_date, end_date)
 

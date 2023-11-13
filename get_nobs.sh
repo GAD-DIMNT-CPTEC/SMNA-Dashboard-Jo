@@ -5,7 +5,7 @@
 
 # Na máquina local, montar os discos da seguinte forma:
 # $ cd /extra2
-# $ sshfs carlos_bastarz@login-xc50.cptec.inpe.br:/lustre_xc50/ioper/models/SMNA-Oper/SMG/datainout/gsi/dataout XC50_SMNA_GSI_dataout_preOper/
+# $ sshfs carlos_bastarz@login-xc50.cptec.inpe.br:/lustre_xc50/ioper/models/SMNA-Oper/SMG/datainout/gsi/dataout XC50_SMNA_GSI_dataout_preOper
 # $ sshfs carlos_bastarz@login-xc50.cptec.inpe.br:/lustre_xc50/joao_gerd/SMNA-Oper/SMG/datainout/gsi/dataout XC50_SMNA_GSI_dataout_JGerd
 
 # @cfbastarz (31/08/2023)
@@ -16,7 +16,7 @@ inctime=/opt/inctime/bin/inctime
 Exps=(JGerd preOper)
 
 datai=2023010100
-dataf=2023101900
+dataf=2023111300
 
 data=${datai}
 
