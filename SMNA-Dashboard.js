@@ -1,4 +1,4 @@
-importScripts("https://cdn.jsdelivr.net/pyodide/v0.23.4/pyc/pyodide.js");
+importScripts("https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js");
 
 function sendPatch(patch, buffers, msg_id) {
   self.postMessage({
@@ -15,7 +15,7 @@ async function startApplication() {
   self.pyodide.globals.set("sendPatch", sendPatch);
   console.log("Loaded!");
   await self.pyodide.loadPackage("micropip");
-  const env_spec = ['https://cdn.holoviz.org/panel/1.2.3/dist/wheels/bokeh-3.2.2-py3-none-any.whl', 'https://cdn.holoviz.org/panel/1.2.3/dist/wheels/panel-1.2.3-py3-none-any.whl', 'pyodide-http==0.2.1', 'hvplot', 'matplotlib', 'numpy', 'pandas']
+  const env_spec = ['https://cdn.holoviz.org/panel/wheels/bokeh-3.3.0-py3-none-any.whl', 'https://cdn.holoviz.org/panel/1.3.2/dist/wheels/panel-1.3.2-py3-none-any.whl', 'pyodide-http==0.2.1', 'hvplot', 'matplotlib', 'numpy', 'pandas']
   for (const pkg of env_spec) {
     let pkg_name;
     if (pkg.endsWith('.whl')) {
@@ -69,7 +69,7 @@ init_doc()
 # ---
 # Carlos Frederico Bastarz (carlos.bastarz@inpe.br), Abril de 2023.
 
-# In[1]:
+# In[11]:
 
 
 import os
@@ -82,10 +82,10 @@ import panel as pn
 from datetime import datetime, timedelta
 from matplotlib import pyplot as plt
 
-pn.extension(sizing_mode="stretch_width", notifications=True)
+pn.extension(sizing_mode='stretch_width', notifications=True)
 
 
-# In[3]:
+# In[17]:
 
 
 # Carrega o arquivo CSV
@@ -94,7 +94,7 @@ dfs = pd.read_csv('https://raw.githubusercontent.com/GAD-DIMNT-CPTEC/SMNA-Dashbo
 #dfs = pd.read_csv('jo_table_series.csv', header=[0, 1], parse_dates=[('df_preOper', 'Date'), ('df_JGerd', 'Date')])
 
 
-# In[4]:
+# In[13]:
 
 
 # Separa os dataframes de interesse
@@ -103,7 +103,7 @@ df_preOper = dfs.df_preOper
 df_JGerd = dfs.df_JGerd
 
 
-# In[5]:
+# In[14]:
 
 
 # Atribui nomes aos dataframes
@@ -112,13 +112,14 @@ df_preOper.name = 'df_preOper'
 df_JGerd.name = 'df_JGerd'
 
 
-# In[6]:
+# In[16]:
 
 
 # Constrói as widgets e apresenta o dashboard
 
 start_date = datetime(2023, 1, 1, 0)
 end_date = datetime(2023, 11, 13, 0)
+end_date_fixed = datetime(2023, 11, 13, 0)
 
 values = (start_date, end_date)
 
@@ -143,6 +144,8 @@ iter_fcost = pn.widgets.Select(name='Iteração', value=iter_fcost_list[0], opti
 # então a função a seguir utiliza apenas um dos dataframes para criar a máscara temporal que será 
 # utilizada pelos demais
 def subset_dataframe(df, start_date, end_date):
+    if end_date > end_date_fixed:
+        end_date = end_date_fixed
     mask = (df['Date'] >= start_date) & (df['Date'] <= end_date)
     return df.loc[mask]
 
@@ -185,14 +188,14 @@ def plotCurves(variable, experiment, synoptic_time, iter_fcost, date_range):
                 
             xticks = len(df_s['Date'].values)    
                 
-            ax_nobs = df_s.hvplot.line(x='Date', y='Nobs', xlabel='Data', ylabel=str('Nobs'), xticks=xticks, rot=90, grid=True, label=str(i), line_width=3, height=height, responsive=True)    
-            ax_jo = df_s.hvplot.line(x='Date', y='Jo', xlabel='Data', ylabel=str('Jo'), xticks=xticks, rot=90, grid=True, label=str(i), line_width=3, height=height, responsive=True)    
-            ax_jon = df_s.hvplot.line(x='Date', y='Jo/n', xlabel='Data', ylabel=str('Jo/n'), xticks=xticks, rot=90, grid=True, label=str(i), line_width=3, height=height, responsive=True)
+            ax_nobs = df_s.hvplot.line(x='Date', y='Nobs', xlabel='Data', ylabel=str('Nobs'), persist=True, xticks=xticks, rot=90, grid=True, label=str(i), line_width=3, height=height, responsive=True)    
+            ax_jo = df_s.hvplot.line(x='Date', y='Jo', xlabel='Data', ylabel=str('Jo'), persist=True, xticks=xticks, rot=90, grid=True, label=str(i), line_width=3, height=height, responsive=True)    
+            ax_jon = df_s.hvplot.line(x='Date', y='Jo/n', xlabel='Data', ylabel=str('Jo/n'), persist=True, xticks=xticks, rot=90, grid=True, label=str(i), line_width=3, height=height, responsive=True)
             
             # Adiciona pontos às curvas
-            sax_nobs = df_s.hvplot.scatter(x='Date', y='Nobs', height=height, label=str(i), responsive=True).opts(size=5, marker='o')    
-            sax_jo = df_s.hvplot.scatter(x='Date', y='Jo', height=height, label=str(i), responsive=True).opts(size=5, marker='o')     
-            sax_jon = df_s.hvplot.scatter(x='Date', y='Jo/n', height=height, label=str(i), responsive=True).opts(size=5, marker='o')             
+            sax_nobs = df_s.hvplot.scatter(x='Date', y='Nobs', height=height, label=str(i), persist=True, responsive=True).opts(size=5, marker='o')    
+            sax_jo = df_s.hvplot.scatter(x='Date', y='Jo', height=height, label=str(i), persist=True, responsive=True).opts(size=5, marker='o')     
+            sax_jon = df_s.hvplot.scatter(x='Date', y='Jo/n', height=height, label=str(i), persist=True, responsive=True).opts(size=5, marker='o')             
             
         else:
             
@@ -226,14 +229,14 @@ def plotCurves(variable, experiment, synoptic_time, iter_fcost, date_range):
                 
             xticks = len(df_s['Date'].values)
             
-            ax_nobs *= df_s.hvplot.line(x='Date', y='Nobs', xlabel='Data', ylabel=str('Nobs'), xticks=xticks, rot=90, grid=True, label=str(i), line_width=3, height=height, responsive=True)
-            ax_jo *= df_s.hvplot.line(x='Date', y='Jo', xlabel='Data', ylabel=str('Jo'), xticks=xticks, rot=90, grid=True, label=str(i), line_width=3, height=height, responsive=True)
-            ax_jon *= df_s.hvplot.line(x='Date', y='Jo/n', xlabel='Data', ylabel=str('Jo/n'), xticks=xticks, rot=90, grid=True, label=str(i), line_width=3, height=height, responsive=True)
+            ax_nobs *= df_s.hvplot.line(x='Date', y='Nobs', xlabel='Data', ylabel=str('Nobs'), persist=True, xticks=xticks, rot=90, grid=True, label=str(i), line_width=3, height=height, responsive=True)
+            ax_jo *= df_s.hvplot.line(x='Date', y='Jo', xlabel='Data', ylabel=str('Jo'), persist=True, xticks=xticks, rot=90, grid=True, label=str(i), line_width=3, height=height, responsive=True)
+            ax_jon *= df_s.hvplot.line(x='Date', y='Jo/n', xlabel='Data', ylabel=str('Jo/n'), persist=True, xticks=xticks, rot=90, grid=True, label=str(i), line_width=3, height=height, responsive=True)
             
             # Adiciona pontos às curvas
-            sax_nobs *= df_s.hvplot.scatter(x='Date', y='Nobs', height=height, label=str(i), responsive=True).opts(size=5, marker='o')    
-            sax_jo *= df_s.hvplot.scatter(x='Date', y='Jo', height=height, label=str(i), responsive=True).opts(size=5, marker='o')     
-            sax_jon *= df_s.hvplot.scatter(x='Date', y='Jo/n', height=height, label=str(i), responsive=True).opts(size=5, marker='o')             
+            sax_nobs *= df_s.hvplot.scatter(x='Date', y='Nobs', height=height, label=str(i), persist=True, responsive=True).opts(size=5, marker='o')    
+            sax_jo *= df_s.hvplot.scatter(x='Date', y='Jo', height=height, label=str(i), persist=True, responsive=True).opts(size=5, marker='o')     
+            sax_jon *= df_s.hvplot.scatter(x='Date', y='Jo/n', height=height, label=str(i), persist=True, responsive=True).opts(size=5, marker='o')             
             
     return pn.Column(ax_nobs*sax_nobs, ax_jo*sax_jo, ax_jon*sax_jon, sizing_mode='stretch_width')
 
@@ -346,6 +349,12 @@ pn.template.FastListTemplate(
 ).servable();
 
 # Nota: utilize o método servable() quando o script for convertido.
+
+
+# In[ ]:
+
+
+
 
 
 # In[ ]:
